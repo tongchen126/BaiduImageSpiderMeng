@@ -130,9 +130,12 @@ class Crawler:
                 # 解析json
                 try:
                     rsp_data = json.loads(rsp, strict=False)
-                except:
+                except Exception as e:
                     print("Json load failed, retry")
+                    print(e)
                     time.sleep(self.time_sleep)
+                    print("Download next page.")
+                    pn += self.__per_page
                     continue
                 if 'data' not in rsp_data:
                     print("Retrying...")
@@ -168,10 +171,10 @@ if __name__ == '__main__':
         'hostname': "notebook-user",
         'trial_timestamp': '2023-03-11',
         'retry_seconds': 1,
-        'total_images': 10,
-        'image_per_page': 100, #[10,20,30,40,50,60,70,80,90,100]
+        'total_images': 120,
+        'image_per_page': 10, #[10,20,30,40,50,60,70,80,90,100]
         'start_page': 1,
     }
-    for word in ["道德的","不道德的","正面的", "负面的", "消极的", "积极的"]:
+    for word in ["有道德的","不道德的"]:
         crawler = Crawler(config['retry_seconds'],savepath=config)  # 抓取延迟为 0.05
         crawler.start(word, config['total_images'], config['start_page'], config['image_per_page'])
